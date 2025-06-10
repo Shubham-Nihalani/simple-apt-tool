@@ -7,7 +7,8 @@ sleep 2
 echo "Do you want to install a package or remove it?"
 sleep 2
 
-read -n 2 -p "To install, press I. To remove, press R :" prompt1 # here 2 because of enter key
+read -n 1 -p "To install, press I. To remove, press R :" prompt1
+read -s -n 1
 prompt="${prompt1^^}" # always take prompt in uppercase
 echo -e "\n You entered: $prompt"
 
@@ -15,7 +16,8 @@ echo -e "\n You entered: $prompt"
 
 if [[ "$prompt" == "I" || "$prompt" == "R" ]]; then
     read -p "Type the package name: " pkg
-    if [ "$pkg" == "" ]; then
+	# Checks if provided a package or not
+    if [ -z "$pkg" ]; then
     echo " Bhagggg..."
     exit
     else
@@ -29,13 +31,25 @@ if [[ "$prompt" == "I" || "$prompt" == "R" ]]; then
     if [[ "$prompt" == "I" ]]; then
         echo "Installing $pkg..."
         sleep 2
-        sudo apt install "$pkg" 
-        echo "$pkg installation complete. Exit code : $?"
+		# added log file support
+        sudo apt install "$pkg" -y >> ~/install_log.txt 2>&1
+		# another if-else to check whether the installation is successful or not
+        if [[ $? == 0 ]]; then
+        echo "$pkg removal complete. Exit code : $?"
+        else
+        echo -e "$pkg installation unsuccessful.\nCheck ~/install_log.txt for more details.\nExit code : $?"
+        fi
     elif [[ "$prompt" == "R" ]]; then
         echo "Removing $pkg..."
         sleep 2
-        sudo apt purge "$pkg"
+        # added log file support
+        sudo apt purge "$pkg" -y >> ~/remove_log.txt 2>&1
+		# another if-else to check whether the removal is successful or not
+		if [[ $? == 0 ]]; then
         echo "$pkg removal complete. Exit code : $?"
+        else
+        echo -e "$pkg removal unsuccessful.\nCheck ~/remove_log.txt for more details.\nExit code : $?"
+        fi
     fi
 else
     echo "Bhaggg...."
