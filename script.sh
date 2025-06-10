@@ -7,18 +7,17 @@ sleep 2
 echo "Do you want to install a package or remove it?"
 sleep 2
 
-read -n 1 -p "To install, press I. To remove, press R :" prompt1
-read -s -n 1
-prompt="${prompt1^^}" # always take prompt in uppercase
-echo -e "\n You entered: $prompt"
-
+read -p "To install, press I. To remove, press R :" prompt1
+prompt="${prompt1:0:1}"   # take FIRST character
+prompt="${prompt^^}"    # convert it to uppercase
+echo "You entered: $prompt"
 # nested if-else to check prompts
 
 if [[ "$prompt" == "I" || "$prompt" == "R" ]]; then
     read -p "Type the package name: " pkg
 	# Checks if provided a package or not
     if [ -z "$pkg" ]; then
-    echo " Bhagggg..."
+    echo "Bhagggg..."
     exit
     else
     sleep 1
