@@ -52,5 +52,5 @@ if [[ "$prompt" == "I" || "$prompt" == "R" ]]; then
     fi
 else
     echo "Bhaggg...."
-	# case of invalud condition
+	# case of invalid condition
 fi
